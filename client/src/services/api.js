@@ -2,22 +2,19 @@ import axios from 'axios';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Get the host IP from Expo's manifest (works for both emulator and physical devices)
+// Production API URL (Render deployment)
+const PRODUCTION_API = 'https://splittheexpenses.onrender.com/api';
+
+// Always use production API (local development has network issues)
 const getBaseUrl = () => {
-    // For Expo Go, use the debuggerHost which contains the dev machine's IP
-    const debuggerHost = Constants.expoConfig?.hostUri || Constants.manifest?.debuggerHost;
-    if (debuggerHost) {
-        const host = debuggerHost.split(':')[0]; // Get just the IP part
-        return `http://${host}:5000/api`;
-    }
-    // Fallback for web or production
-    return 'http://localhost:5000/api';
+    return PRODUCTION_API;
 };
 
 const BASE_URL = getBaseUrl();
 
 const api = axios.create({
     baseURL: BASE_URL,
+    timeout: 15000, // 15 second timeout
     headers: {
         'Content-Type': 'application/json',
     },

@@ -1,4 +1,5 @@
 import React from 'react';
+import { View, Image, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme, Icon } from 'react-native-paper';
@@ -40,7 +41,19 @@ function HomeStackNavigator() {
             <HomeStack.Screen
                 name="HomeMain"
                 component={HomeScreen}
-                options={{ title: 'Hisaab 💰' }}
+                options={{
+                    headerTitle: () => (
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Image
+                                source={require('../../assets/splash.jpg')}
+                                style={{ width: 32, height: 32, borderRadius: 6, marginRight: 8 }}
+                            />
+                            <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>
+                                SplitExpenses
+                            </Text>
+                        </View>
+                    ),
+                }}
             />
             <HomeStack.Screen
                 name="AddExpense"
