@@ -42,7 +42,7 @@ A beautiful and intuitive mobile application for splitting expenses among friend
   <tr>
     <td align="center"><b>Settlement</b></td>
     <td align="center"><b>Activity</b></td>
-    <td align="center"><b>Dark Mode</b></td>
+    <td align="center"><b>Light Mode</b></td>
   </tr>
 </table>
 
@@ -225,5 +225,6 @@ This project is licensed under the ISC License.
 <p align="center">
   Made with ❤️ for easier expense splitting
 </p>
+
 
 
