@@ -37,7 +37,7 @@ A beautiful and intuitive mobile application for splitting expenses among friend
   <tr>
     <td><img src="./screenshots/settlement.png" alt="Settlement" width="200"/></td>
     <td><img src="./screenshots/activity.png" alt="Activity" width="200"/></td>
-    <td><img src="./screenshots/dark_mode.png" alt="Dark Mode" width="200"/></td>
+    <td><img src="./screenshots/light_mode.png" alt="Light Mode" width="200"/></td>
   </tr>
   <tr>
     <td align="center"><b>Settlement</b></td>
@@ -184,7 +184,7 @@ To add screenshots to this README:
    - `groups.png` - Groups screen
    - `settlement.png` - Settlement screen
    - `activity.png` - Activity/History screen
-   - `dark_mode.png` - Dark mode example
+   - `light_mode.png` - light mode example
 
 ---
 
@@ -225,3 +225,4 @@ This project is licensed under the ISC License.
 <p align="center">
   Made with ❤️ for easier expense splitting
 </p>
+
