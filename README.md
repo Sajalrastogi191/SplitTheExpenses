@@ -2,7 +2,7 @@
 
 A beautiful and intuitive mobile application for splitting expenses among friends and groups. Built with React Native (Expo) and Node.js, this app makes tracking shared expenses effortless.
 
-![App Banner](./screenshots/banner.png)
+![App Banner](./screenshots/banner.jpg)
 
 ---
 
@@ -225,6 +225,7 @@ This project is licensed under the ISC License.
 <p align="center">
   Made with ❤️ for easier expense splitting
 </p>
+
 
 
 
