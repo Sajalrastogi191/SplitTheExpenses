@@ -53,6 +53,7 @@ export const deleteGroup = (id) => api.delete(`/groups/${id}`);
 // Expenses
 export const getExpenses = () => api.get('/expenses');
 export const addExpense = (expenseData) => api.post('/expenses', expenseData);
+export const deleteExpense = (id) => api.delete(`/expenses/${id}`);
 
 // Activity
 export const getActivity = () => api.get('/activity');
@@ -66,5 +67,6 @@ export const resetData = () => api.post('/reset');
 // Journeys
 export const getJourneys = () => api.get('/journeys');
 export const archiveJourney = (name) => api.post('/journeys/archive', { name });
+export const deleteJourney = (id) => api.delete(`/journeys/${id}`);
 
 export default api;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
-import { TextInput, Button, useTheme, Text, Checkbox, Menu, ActivityIndicator, SegmentedButtons, Divider, Card } from 'react-native-paper';
+import { TextInput, Button, useTheme, Text, Checkbox, ActivityIndicator, SegmentedButtons, Divider, Card, Portal, Modal, List, TouchableRipple } from 'react-native-paper';
 import { getPeople, addExpense } from '../services/api';
 
 export default function AddExpenseScreen({ navigation, route }) {
@@ -177,30 +177,46 @@ export default function AddExpenseScreen({ navigation, route }) {
 
                 {/* Payer Selection */}
                 <Text variant="titleMedium" style={styles.label}>Who Paid?</Text>
-                <Menu
-                    visible={menuVisible}
-                    onDismiss={() => setMenuVisible(false)}
-                    anchor={
-                        <Button
-                            mode="outlined"
-                            onPress={() => setMenuVisible(true)}
-                            style={styles.input}
-                        >
-                            {payer || "Select Payer"}
-                        </Button>
-                    }
+                <TouchableRipple
+                    onPress={() => setMenuVisible(true)}
+                    style={[styles.payerSelector, { borderColor: theme.colors.outline }]}
                 >
-                    {people.map(person => (
-                        <Menu.Item
-                            key={person}
-                            onPress={() => {
-                                setPayer(person);
-                                setMenuVisible(false);
-                            }}
-                            title={person}
-                        />
-                    ))}
-                </Menu>
+                    <View style={styles.payerSelectorContent}>
+                        <Text style={{ flex: 1, color: payer ? theme.colors.onSurface : theme.colors.onSurfaceDisabled }}>
+                            {payer || "Select Payer"}
+                        </Text>
+                        <List.Icon icon="chevron-down" />
+                    </View>
+                </TouchableRipple>
+
+                <Portal>
+                    <Modal
+                        visible={menuVisible}
+                        onDismiss={() => setMenuVisible(false)}
+                        contentContainerStyle={[styles.modalContainer, { backgroundColor: theme.colors.surface }]}
+                    >
+                        <Text variant="titleMedium" style={styles.modalTitle}>Select Payer</Text>
+                        <Divider />
+                        <ScrollView style={styles.modalScrollView}>
+                            {people.map(person => (
+                                <List.Item
+                                    key={person}
+                                    title={person}
+                                    onPress={() => {
+                                        setPayer(person);
+                                        setMenuVisible(false);
+                                    }}
+                                    left={props => <List.Icon {...props} icon={payer === person ? "radiobox-marked" : "radiobox-blank"} />}
+                                    style={payer === person ? { backgroundColor: theme.colors.primaryContainer } : undefined}
+                                />
+                            ))}
+                        </ScrollView>
+                        <Divider />
+                        <Button onPress={() => setMenuVisible(false)} style={styles.modalCloseButton}>
+                            Cancel
+                        </Button>
+                    </Modal>
+                </Portal>
 
                 {/* Amount Input */}
                 <Text variant="titleMedium" style={styles.label}>Amount (₹)</Text>
@@ -366,6 +382,31 @@ const styles = StyleSheet.create({
     groupHeader: {
         marginBottom: 16,
         backgroundColor: 'rgba(100, 100, 255, 0.08)',
+    },
+    payerSelector: {
+        borderWidth: 1,
+        borderRadius: 4,
+        padding: 16,
+        marginBottom: 16,
+    },
+    payerSelectorContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    modalContainer: {
+        margin: 20,
+        borderRadius: 12,
+        maxHeight: '70%',
+    },
+    modalTitle: {
+        padding: 16,
+        fontWeight: 'bold',
+    },
+    modalScrollView: {
+        maxHeight: 300,
+    },
+    modalCloseButton: {
+        marginVertical: 8,
     }
 });
 

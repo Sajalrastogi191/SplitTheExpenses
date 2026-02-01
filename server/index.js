@@ -235,6 +235,21 @@ app.post('/api/expenses', async (req, res) => {
     }
 });
 
+// Delete an expense
+app.delete('/api/expenses/:id', async (req, res) => {
+    try {
+        const userId = getUserId(req);
+        const result = await Expense.findOneAndDelete({ _id: req.params.id, userId });
+        if (!result) {
+            return res.status(404).json({ error: 'Expense not found' });
+        }
+        res.json({ message: 'Expense deleted successfully' });
+    } catch (error) {
+        console.error('Delete expense error:', error);
+        res.status(500).json({ error: 'Failed to delete expense' });
+    }
+});
+
 // ===== ACTIVITY ROUTE =====
 app.get('/api/activity', async (req, res) => {
     try {
@@ -354,6 +369,21 @@ app.post('/api/journeys/archive', async (req, res) => {
     } catch (error) {
         console.error('Archive journey error:', error);
         res.status(500).json({ error: 'Failed to archive journey' });
+    }
+});
+
+// Delete a journey
+app.delete('/api/journeys/:id', async (req, res) => {
+    try {
+        const userId = getUserId(req);
+        const result = await Journey.findOneAndDelete({ _id: req.params.id, userId });
+        if (!result) {
+            return res.status(404).json({ error: 'Journey not found' });
+        }
+        res.json({ message: 'Journey deleted successfully' });
+    } catch (error) {
+        console.error('Delete journey error:', error);
+        res.status(500).json({ error: 'Failed to delete journey' });
     }
 });
 

@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl, TouchableOpacity, Alert } from 'react-native';
 import { Text, Card, useTheme, IconButton, Chip, Divider, ActivityIndicator } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-import { getActivity, getJourneys } from '../services/api';
+import { getActivity, getJourneys, deleteJourney } from '../services/api';
 import { useThemeContext } from '../context/ThemeContext';
 
 export default function ActivityScreen({ navigation }) {
@@ -51,6 +51,28 @@ export default function ActivityScreen({ navigation }) {
         });
     }, [navigation, isDark]);
 
+    const handleDeleteJourney = (journey) => {
+        Alert.alert(
+            'Delete Journey',
+            `Are you sure you want to delete "${journey.name}"? This action cannot be undone.`,
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            await deleteJourney(journey.id);
+                            loadData(); // Refresh the list
+                        } catch (error) {
+                            Alert.alert('Error', 'Failed to delete journey');
+                        }
+                    }
+                }
+            ]
+        );
+    };
+
     // Group activities by date
     const groupedActivities = activities.reduce((groups, activity) => {
         const date = activity.date;
@@ -82,21 +104,33 @@ export default function ActivityScreen({ navigation }) {
                         📚 Past Journeys
                     </Text>
                     {journeys.map((journey) => (
-                        <TouchableOpacity
-                            key={journey.id}
-                            onPress={() => navigation.navigate('JourneyDetail', { journey })}
-                            activeOpacity={0.7}
-                        >
-                            <Card style={styles.journeyCard}>
-                                <Card.Content>
-                                    <View style={styles.journeyHeader}>
-                                        <Text variant="titleMedium" style={{ fontWeight: 'bold', flex: 1 }}>
+                        <Card key={journey.id} style={styles.journeyCard}>
+                            <Card.Content>
+                                <View style={styles.journeyHeader}>
+                                    <TouchableOpacity
+                                        style={{ flex: 1 }}
+                                        onPress={() => navigation.navigate('JourneyDetail', { journey })}
+                                        activeOpacity={0.7}
+                                    >
+                                        <Text variant="titleMedium" style={{ fontWeight: 'bold' }}>
                                             {journey.name}
                                         </Text>
-                                        <Chip compact mode="flat" style={{ backgroundColor: theme.colors.primaryContainer }}>
-                                            ₹{journey.totalAmount?.toFixed(0) || 0}
-                                        </Chip>
-                                    </View>
+                                    </TouchableOpacity>
+                                    <Chip compact mode="flat" style={{ backgroundColor: theme.colors.primaryContainer }}>
+                                        ₹{journey.totalAmount?.toFixed(0) || 0}
+                                    </Chip>
+                                    <IconButton
+                                        icon="delete-outline"
+                                        iconColor={theme.colors.error}
+                                        size={20}
+                                        onPress={() => handleDeleteJourney(journey)}
+                                        style={{ margin: 0, marginLeft: 4 }}
+                                    />
+                                </View>
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('JourneyDetail', { journey })}
+                                    activeOpacity={0.7}
+                                >
                                     <View style={styles.journeyMeta}>
                                         <Text variant="bodySmall" style={{ opacity: 0.7 }}>
                                             📅 {journey.date}
@@ -105,9 +139,9 @@ export default function ActivityScreen({ navigation }) {
                                             {journey.expenseCount || 0} expenses • {journey.peopleCount || 0} people
                                         </Text>
                                     </View>
-                                </Card.Content>
-                            </Card>
-                        </TouchableOpacity>
+                                </TouchableOpacity>
+                            </Card.Content>
+                        </Card>
                     ))}
                     <Divider style={{ marginVertical: 16 }} />
                 </View>

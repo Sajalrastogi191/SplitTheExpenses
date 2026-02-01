@@ -3,6 +3,7 @@ import { View, Image, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme, Icon } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Home Tab Screens
 import HomeScreen from '../screens/HomeScreen';
@@ -119,6 +120,7 @@ function ActivityStackNavigator() {
 
 export default function TabNavigator() {
     const theme = useTheme();
+    const insets = useSafeAreaInsets();
 
     return (
         <Tab.Navigator
@@ -129,9 +131,9 @@ export default function TabNavigator() {
                 tabBarStyle: {
                     backgroundColor: theme.colors.surface,
                     borderTopColor: theme.colors.outlineVariant,
-                    paddingBottom: 5,
+                    paddingBottom: insets.bottom > 0 ? insets.bottom : 5,
                     paddingTop: 5,
-                    height: 60,
+                    height: 60 + (insets.bottom > 0 ? insets.bottom : 0),
                 },
                 tabBarLabelStyle: {
                     fontSize: 12,

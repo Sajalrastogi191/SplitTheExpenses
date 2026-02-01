@@ -3,6 +3,7 @@ import { View, ActivityIndicator } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useThemeContext } from './src/context/ThemeContext';
 import { UserProvider, useUser } from './src/context/UserContext';
 import TabNavigator from './src/navigation/TabNavigator';
@@ -32,10 +33,12 @@ const AppContent = () => {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <UserProvider>
-        <AppContent />
-      </UserProvider>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <UserProvider>
+          <AppContent />
+        </UserProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

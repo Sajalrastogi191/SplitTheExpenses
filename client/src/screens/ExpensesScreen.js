@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
-import { Text, Card, useTheme, Chip, Divider } from 'react-native-paper';
+import { View, StyleSheet, FlatList, RefreshControl, Alert } from 'react-native';
+import { Text, Card, useTheme, Chip, Divider, IconButton } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-import { getExpenses } from '../services/api';
+import { getExpenses, deleteExpense } from '../services/api';
 
 export default function ExpensesScreen() {
     const [expenses, setExpenses] = useState([]);
@@ -28,6 +28,28 @@ export default function ExpensesScreen() {
             loadExpenses();
         }, [])
     );
+
+    const handleDeleteExpense = (expense) => {
+        Alert.alert(
+            'Delete Expense',
+            `Are you sure you want to delete this expense of ₹${expense.amount.toFixed(2)}${expense.description ? ` (${expense.description})` : ''}?`,
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            await deleteExpense(expense.id);
+                            loadExpenses(); // Refresh the list
+                        } catch (error) {
+                            Alert.alert('Error', 'Failed to delete expense');
+                        }
+                    }
+                }
+            ]
+        );
+    };
 
     const renderItem = ({ item }) => (
         <Card style={styles.expenseCard}>
@@ -56,6 +78,13 @@ export default function ExpensesScreen() {
                     >
                         {item.splitType === 'unequal' ? 'Unequal' : 'Equal'}
                     </Chip>
+                    <IconButton
+                        icon="delete-outline"
+                        iconColor={theme.colors.error}
+                        size={20}
+                        onPress={() => handleDeleteExpense(item)}
+                        style={{ margin: 0, marginLeft: 4 }}
+                    />
                 </View>
 
                 {item.description && (

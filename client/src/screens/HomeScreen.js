@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl, Alert } from 'react-native';
-import { Text, Card, Button, useTheme, IconButton, Chip, Portal, Dialog, TextInput } from 'react-native-paper';
+import { Text, Card, Button, useTheme, IconButton, Portal, Dialog, TextInput, Modal, List, Divider, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import { getExpenses, getPeople, getGroups, archiveJourney } from '../services/api';
 import { useThemeContext } from '../context/ThemeContext';
@@ -20,6 +20,7 @@ export default function HomeScreen({ navigation }) {
     const [journeyDialogVisible, setJourneyDialogVisible] = useState(false);
     const [journeyName, setJourneyName] = useState('');
     const [saving, setSaving] = useState(false);
+    const [groupDropdownVisible, setGroupDropdownVisible] = useState(false);
 
     const loadData = async () => {
         try {
@@ -158,28 +159,22 @@ export default function HomeScreen({ navigation }) {
 
                 <Text variant="titleMedium" style={styles.sectionTitle}>Quick Actions</Text>
 
-                {/* Group Selector */}
+                {/* Group Selector Dropdown */}
                 {groups.length > 0 && (
                     <View style={styles.groupSelectorContainer}>
                         <Text variant="bodyMedium" style={{ marginBottom: 8 }}>Select Group for Expense:</Text>
-                        <ScrollView
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            style={styles.chipScroll}
+                        <TouchableRipple
+                            onPress={() => setGroupDropdownVisible(true)}
+                            style={[styles.groupSelector, { borderColor: theme.colors.outline }]}
                         >
-                            {groups.map(group => (
-                                <Chip
-                                    key={group.id}
-                                    selected={selectedGroup?.id === group.id}
-                                    onPress={() => setSelectedGroup(group)}
-                                    style={styles.groupChip}
-                                    icon={selectedGroup?.id === group.id ? "check" : "account-group"}
-                                    mode={selectedGroup?.id === group.id ? "flat" : "outlined"}
-                                >
-                                    {group.name}
-                                </Chip>
-                            ))}
-                        </ScrollView>
+                            <View style={styles.groupSelectorContent}>
+                                <List.Icon icon="account-group" style={{ margin: 0 }} />
+                                <Text style={{ flex: 1, marginLeft: 8, color: selectedGroup ? theme.colors.onSurface : theme.colors.onSurfaceDisabled }}>
+                                    {selectedGroup?.name || "Select Group"}
+                                </Text>
+                                <List.Icon icon="chevron-down" style={{ margin: 0 }} />
+                            </View>
+                        </TouchableRipple>
                         {selectedGroup && (
                             <Text variant="bodySmall" style={{ marginTop: 8, opacity: 0.7 }}>
                                 {selectedGroup.members.length} members: {selectedGroup.members.join(', ')}
@@ -257,6 +252,35 @@ export default function HomeScreen({ navigation }) {
                         </Button>
                     </Dialog.Actions>
                 </Dialog>
+
+                {/* Group Selection Modal */}
+                <Modal
+                    visible={groupDropdownVisible}
+                    onDismiss={() => setGroupDropdownVisible(false)}
+                    contentContainerStyle={[styles.modalContainer, { backgroundColor: theme.colors.surface }]}
+                >
+                    <Text variant="titleMedium" style={styles.modalTitle}>Select Group</Text>
+                    <Divider />
+                    <ScrollView style={styles.modalScrollView}>
+                        {groups.map(group => (
+                            <List.Item
+                                key={group.id}
+                                title={group.name}
+                                description={`${group.members.length} members`}
+                                onPress={() => {
+                                    setSelectedGroup(group);
+                                    setGroupDropdownVisible(false);
+                                }}
+                                left={props => <List.Icon {...props} icon={selectedGroup?.id === group.id ? "radiobox-marked" : "radiobox-blank"} />}
+                                style={selectedGroup?.id === group.id ? { backgroundColor: theme.colors.primaryContainer } : undefined}
+                            />
+                        ))}
+                    </ScrollView>
+                    <Divider />
+                    <Button onPress={() => setGroupDropdownVisible(false)} style={styles.modalCloseButton}>
+                        Cancel
+                    </Button>
+                </Modal>
             </Portal>
         </>
     );
@@ -301,15 +325,33 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.03)',
         borderRadius: 8,
     },
-    chipScroll: {
-        flexGrow: 0,
+    groupSelector: {
+        borderWidth: 1,
+        borderRadius: 4,
+        padding: 12,
     },
-    groupChip: {
-        marginRight: 8,
+    groupSelectorContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     saveJourneyButton: {
         marginBottom: 16,
         borderRadius: 8,
+    },
+    modalContainer: {
+        margin: 20,
+        borderRadius: 12,
+        maxHeight: '70%',
+    },
+    modalTitle: {
+        padding: 16,
+        fontWeight: 'bold',
+    },
+    modalScrollView: {
+        maxHeight: 300,
+    },
+    modalCloseButton: {
+        marginVertical: 8,
     }
 });
 
