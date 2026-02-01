@@ -22,9 +22,9 @@ A beautiful and intuitive mobile application for splitting expenses among friend
 
 <table>
   <tr>
-    <td><img src="./screenshots/home_screen.png" alt="Home Screen" width="200"/></td>
-    <td><img src="./screenshots/add_expense.png" alt="Add Expense" width="200"/></td>
-    <td><img src="./screenshots/groups.png" alt="Groups" width="200"/></td>
+    <td><img src="./screenshots/home_screen.jpeg" alt="Home Screen" width="200"/></td>
+    <td><img src="./screenshots/add_expense.jpeg" alt="Add Expense" width="200"/></td>
+    <td><img src="./screenshots/groups.jpeg" alt="Groups" width="200"/></td>
   </tr>
   <tr>
     <td align="center"><b>Home Screen</b></td>
@@ -35,9 +35,9 @@ A beautiful and intuitive mobile application for splitting expenses among friend
 
 <table>
   <tr>
-    <td><img src="./screenshots/settlement.png" alt="Settlement" width="200"/></td>
-    <td><img src="./screenshots/activity.png" alt="Activity" width="200"/></td>
-    <td><img src="./screenshots/light_mode.png" alt="Light Mode" width="200"/></td>
+    <td><img src="./screenshots/settlement.jpeg" alt="Settlement" width="200"/></td>
+    <td><img src="./screenshots/activity.jpeg" alt="Activity" width="200"/></td>
+    <td><img src="./screenshots/light_mode.jpeg" alt="Light Mode" width="200"/></td>
   </tr>
   <tr>
     <td align="center"><b>Settlement</b></td>
@@ -225,4 +225,5 @@ This project is licensed under the ISC License.
 <p align="center">
   Made with ❤️ for easier expense splitting
 </p>
+
 
